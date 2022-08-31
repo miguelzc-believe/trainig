@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, ValidationPipe, Request } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { LocalAuthGuard } from 'src/auth/local.auth.guard';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
@@ -22,14 +23,10 @@ export class UserController {
     }
 
     @Get()
+    @UseGuards(JwtAuthGuard)
     getUsers() {
         return this.userService.getUsers();
     }
-
-    // @Get(':id')
-    // getUser(@Param('id') id: string) {
-    //     return this.userService.getUser(+id);
-    // }
 
     @Patch(':id')
     editUser(@Param('id') id: string, @Body(new ValidationPipe()) updateUserDto: UpdateUserDto) {
@@ -48,21 +45,6 @@ export class UserController {
             User: req.user,
             msg: 'User logged in'
         };
-    }
-
-    // @UseGuards(LocalAuthGuard)
-    // @Post('/login')
-    // login(@Param('email') email: string, @Param('password') password: string): any {
-    //     return {
-    //         msg: 'User logged in'
-    //     };
-    // }
-
-    // Get / protected
-    @UseGuards(AuthenticatedGuard)
-    @Get('/protected')
-    getHello(@Request() req): string {
-        return req.user;
     }
 
     @Get('/logout')
