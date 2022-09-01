@@ -50,7 +50,7 @@ export class UserService {
 
     getUsername(name: string) {
         try {
-            return this.prisma.user.findFirst({where: {name: name}});
+            return this.prisma.user.findFirst({where: {name: name}, include: {posts: true}});
         } catch (error) {
             return error;
         }
@@ -59,6 +59,22 @@ export class UserService {
     getByEmail(email: string) {
         try {
             return this.prisma.user.findFirst({where: {email: email}});
+        } catch (error) {
+            return error;
+        }
+    }
+
+    getFindFirst(params: Prisma.UserFindFirstArgs) {
+        try {
+            return this.prisma.user.findFirst(params);
+        } catch (error) {
+            return error;
+        }
+    }
+
+    upsert(params: Prisma.UserUpsertArgs) {
+        try {
+            return this.prisma.user.upsert(params);
         } catch (error) {
             return error;
         }
