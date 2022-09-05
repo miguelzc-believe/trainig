@@ -16,14 +16,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 
 async validate(payload: any) {
-    console.log(payload)
-//   const user = await this.userService.getByEmail(payload.email);
-//   if (!user) {
-//     throw new UnauthorizedException({
-//       message: 'Token Sesion Invalido',
-//       status: 401,
-//     });
-//   }
-  return payload;
+  const user = await this.userService.getByEmail(payload.email);
+  if (!user) {
+    throw new UnauthorizedException({
+      message: 'Token Sesion Invalido',
+      status: 401,
+    });
+  }
+  return {payload, user};
 }
 }

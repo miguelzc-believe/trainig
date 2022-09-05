@@ -17,6 +17,10 @@ model User {
   lastName String? @default("")
   posts Post[]
   password String
+  // roleId Int
+  role Role @relation(fields: [roleId], references: [roleId])
+  roleId Int
+  likesPost Likes[]
 }
 
 model Post {
@@ -26,4 +30,20 @@ model Post {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  Int
+  liked     Likes[]
+}
+
+model Role {
+  roleId   Int     @id @default(autoincrement())
+  role     String
+  user     User[]
+}
+
+model Likes {
+  id Int @id @default(autoincrement())
+  user  User @relation(fields: [userId], references: [id])
+  userId Int
+  post  Post @relation(fields: [postId], references: [id])
+  postId Int
+  @@unique([userId, postId])
 }

@@ -1,9 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, ValidationPipe, Request, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards, ValidationPipe, Request, Query, Req } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Prisma } from '@prisma/client';
-import { AuthenticatedGuard } from 'src/auth/authenticated.guard';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/auth/local.auth.guard';
+import { JwtPayload } from 'src/auth/jwt-payload';
 import { CreateUserDto } from './dto/createUser.dto';
 import { UpdateUserDto } from './dto/updateUser.dto';
 import { UserService } from './user.service';
@@ -50,20 +50,5 @@ export class UserController {
     @Delete(':id')
     deleteUser(@Param('id') id: string) {
         return this.userService.deleteUser(+id);
-    }
-
-    @UseGuards(LocalAuthGuard)
-    @Post('/login')
-    login(@Request() req): any {
-        return {
-            User: req.user,
-            msg: 'User logged in'
-        };
-    }
-
-    @Get('/logout')
-    logout(@Request() req): any {
-        req.session.destroy();
-        return { msg: 'The user session has ended' }
     }
 }

@@ -35,4 +35,33 @@ export class PostService {
   remove(id: number) {
     return this.prisma.post.delete({where: {id: id}});
   }
+
+  disable(id: number) {
+    try {
+      return this.prisma.post.update({where: {id: id}, data: {published: false }})
+    } catch (error) {
+      return error;
+    }
+  }
+
+  getState(id: number) {
+    try {
+      return this.prisma.post.findFirst({select: {published: true}, where: {id: id}})
+    } catch (error) {
+      return error;
+    }
+  }
+
+  // enable(id: number, userId: number) {
+  //   try {
+  //     return this.prisma.post.update({
+  //       where: {
+  //         id: id,
+  //         authorId: userId
+  //       }, 
+  //       data: {published: true }})
+  //   } catch (error) {
+  //     return error;
+  //   }
+  // }
 }
